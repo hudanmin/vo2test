@@ -17,6 +17,7 @@ An asteroid can be mined by only one miner at a time.
 
 The simulation is based on an event loop, 1 second in real life equals 1 year in the simulation.
 
+There is no final goal to reach. The goal is that the simulation works.
 
 ## Rules
 
@@ -34,8 +35,11 @@ The simulation is based on an event loop, 1 second in real life equals 1 year in
 #### Planet
 
 - A planet can can store an infinite number of mineral.
-- A planet can spawn a miner
 - A planet has a position (`x`, `y`)
+- A planet can spawn a miner
+	- A planet can spawn a miner only when it has enough mineral (the cost to spawn a miner is `1000` minerals)
+	- A planet can spawn an unlimited amount of miners, as long as it has enough minerals
+	- When a miner is spawn, the amount of minerals (`1000` minerals) is substracted from the planet's total mineral storage
 
 
 #### Miner
@@ -53,13 +57,28 @@ The simulation is based on an event loop, 1 second in real life equals 1 year in
 - A miner can mine an asteroid:
 	- The miner needs to be at the same position as the asteroid to be able to mine it
     - The miner can mine a maximum of `miningSpeed` minerals per year (ie. if mining speed is 30, the miner will mine 30 minerals per year)
+- At the start of the simulation all miners are positionned at their original planet
+- A miner has a status:
+	- `0` (`int`): Idle
+	- `1` (`int`): Traveling
+	- `2` (`int`): Mining
+	- `3` (`int`): Transfering minerals to planet
+- Each time a miner does an action, its action should be recorded in database, in a `history` table
+- Miner actions / history are:
+	- Traveling from planet `[planet name]` to asteroid `[asteroid name]`
+	- Traveling from asteroid `[asteroid name]` to `[planet name]`
+	- Mining asteroid `[asteroid name]`
+	- Transfering minerals to planet `[planet name]`
+	- ... and others if you think they make sense
 
 
 #### Asteroid
 
 - An asteroid has a position (`x`, `y`)
+- An asteroid has a status (`1`: `has minerals`, `0`: `depleted`) - default to `1`
 - An asteroid has an amount of minerals (it starts with a random amount from `800` to `1200`)
-- When a miner mines an asteroid, the amount of mined minerals is deducted from the amount stored in the asteroid
+- When a miner mines an asteroid, the amount of mined minerals is substracted from the amount stored in the asteroid
+- When an asteroid has no minerals anymore, its status changes from `1` to `0`
 
 
 #### Mineral
@@ -72,3 +91,26 @@ The simulation is based on an event loop, 1 second in real life equals 1 year in
 ## Structure
 
 The deliverable is a backend built using node.js, express.js and MongoDB (and other npm packages if needed), and a frontend built using React.
+
+The frontend shoud interact with the backend in 2 ways:
+
+- Websocket:
+	- All planet, miners and asteroids status and information displayed on the frontend should be updated live via a websocket connection to the backend
+	- Each time a miner, planet, asteroid is created or modified on the backend, it should be updated live on the frontend
+- REST API:
+	- All data should be accessible via a REST API structure:
+		- GET `/miners`: return the list of miners
+		- GET `/miners?planetId=[planet ID]`: return the list of miners from a given planet ID
+		- GET `/miners/[miner ID]`: return a miner based on its ID
+		- POST `/miners`: create a miner
+		- PUT `/miners/[miner ID]`: update a miner based on its ID
+		- DELETE `/miners/[miner ID]`: delete a miner based on its ID
+	- Same instruction for planets and asteroids
+
+
+
+
+
+
+
+
