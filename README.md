@@ -40,6 +40,7 @@ There is no final goal to reach. The goal is that the simulation works.
 	- A planet can spawn a miner only when it has enough mineral (the cost to spawn a miner is `1000` minerals)
 	- A planet can spawn an unlimited amount of miners, as long as it has enough minerals
 	- When a miner is spawn, the amount of minerals (`1000` minerals) is substracted from the planet's total mineral storage
+	- Spawning a miner is done manually from the frontend (see design)
 
 
 #### Miner
@@ -108,9 +109,9 @@ The frontend shoud interact with the backend in 2 ways:
 	- Same instruction for planets and asteroids
 
 
+## Frontend
 
+The frontend is simple in terms of design. What we are paying attention to is the API and Websocket integration.
 
-
-
-
+![List of miners](/images/miners.png)
 
