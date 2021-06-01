@@ -1,4 +1,3 @@
-
 # Mediasia Backend test
 
 ## Program description
@@ -34,12 +33,12 @@ There is no final goal to reach. The goal is that the simulation works.
 
 #### Planet
 
-- A planet can can store an infinite number of mineral.
+- A planet can store an infinite number of mineral.
 - A planet has a position (`x`, `y`)
 - A planet can spawn a miner
 	- A planet can spawn a miner only when it has enough mineral (the cost to spawn a miner is `1000` minerals)
 	- A planet can spawn an unlimited amount of miners, as long as it has enough minerals
-	- When a miner is spawn, the amount of minerals (`1000` minerals) is substracted from the planet's total mineral storage
+	- When a miner is spawn, the amount of minerals (`1000` minerals) is substracted from the planet's total mineral storage (the mineral can never reach a negative number)
 	- Spawning a miner is done manually from the frontend (see design)
 
 
@@ -51,10 +50,9 @@ There is no final goal to reach. The goal is that the simulation works.
 	- `miningSpeed` (`int` from `1` to `200`), this is the number of minerals a miner can mine per year
 - A miner has a position (`x`, `y`)
 - A miner belongs to a planet and can only transfer minerals to the planet is belongs to
-- A miner has a maximum carry capacity (ie. `carryCapacity`). This is the maximum number of minerals it can carry at once
 - A miner can travel:
-	- A miner can travel between its planet and asteroids
-    - A miner can move 
+	- from its origin planet to an asteroids
+    - from an asteroid back to its origin planet
 - A miner can mine an asteroid:
 	- The miner needs to be at the same position as the asteroid to be able to mine it
     - The miner can mine a maximum of `miningSpeed` minerals per year (ie. if mining speed is 30, the miner will mine 30 minerals per year)
@@ -66,9 +64,10 @@ There is no final goal to reach. The goal is that the simulation works.
 	- `3` (`int`): Transfering minerals to planet
 - Each time a miner does an action, its action should be recorded in database, in a `history` table
 - Miner actions / history are:
+    - Miner spawn on planet `[planet name]`
 	- Traveling from planet `[planet name]` to asteroid `[asteroid name]`
-	- Traveling from asteroid `[asteroid name]` to `[planet name]`
-	- Mining asteroid `[asteroid name]`
+	- Mining asteroid `[asteroid name]` for `[number of years]` years
+	- Traveling back from asteroid `[asteroid name]` to `[planet name]`
 	- Transfering minerals to planet `[planet name]`
 	- ... and others if you think they make sense
 
@@ -84,7 +83,7 @@ There is no final goal to reach. The goal is that the simulation works.
 
 #### Mineral
 
-- An amount of mineral is always an `int`
+- An amount of mineral is always an `unsigned int`
 
 
 
@@ -112,6 +111,17 @@ The frontend shoud interact with the backend in 2 ways:
 ## Frontend
 
 The frontend is simple in terms of design. What we are paying attention to is the API and Websocket integration.
+
+## Resources
+
+- Design : https://www.figma.com/file/3nTxwppfcPnOD2K6Yaed5z/Recruitement-test-Backend?node-id=6%3A15971
+- Sample data:
+	- http://miner.dev.mediasia.cn/planets
+	- http://miner.dev.mediasia.cn/miners
+	- http://miner.dev.mediasia.cn/asteroids
+- Frontend base : provided within that repository
+
+
 
 ![List of miners](/images/miners.png)
 
