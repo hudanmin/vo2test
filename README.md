@@ -114,12 +114,20 @@ The frontend is simple in terms of design. What we are paying attention to is th
 
 ## Resources
 
-- Design : https://www.figma.com/file/3nTxwppfcPnOD2K6Yaed5z/Recruitement-test-Backend?node-id=6%3A15971
+- Design : See figma access below
 - Sample data:
 	- http://miner.dev.mediasia.cn/planets
 	- http://miner.dev.mediasia.cn/miners
 	- http://miner.dev.mediasia.cn/asteroids
 - Frontend base : provided within that repository
+
+### Access figma file
+
+To access the full capabilities of our figma design (select elements, export elements, view font size, view css properties, etc) your need to be logged in to a figma account.
+
+1. Create a [Figma account](https://figma.com) or [login](https://figma.com) to your existing figma account
+2. Open the [Figma link](https://www.figma.com/file/OX9KUE33QGTyaSfpiBMsEN/%5BSlingshot%5D-Asteroids---Javascript-Development-Test)
+3. Enter the following password: SlingshotToAsteroids 
 
 
 
