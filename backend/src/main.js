@@ -99,13 +99,13 @@ app.post("/minerlogs", async (req, res) => {
 //miner being in traveling
 app.put("/miners/:minerId/travel",async (req,res)=>{
     const {minerId} = req.params;
-    // console.log("minerId:" + minerId);
-    // console.log("req:" + JSON.stringify(req.body));
+    const travelingYear = 1;//hard code for simulation
+
     const miner = await Miner.findOne({id:minerId});
     req.body.status = MINER_STATUS_TRAVELLING;
     let newPosition = {
-        "x": Boolean(miner.position) ? miner.position.x + miner.travelSpeed : 0,
-        "y": Boolean(miner.position) ? miner.position.y + miner.travelSpeed : 0
+        "x": Boolean(miner.position) ? miner.position.x + travelingYear * miner.travelSpeed : 0,
+        "y": Boolean(miner.position) ? miner.position.y + travelingYear * miner.travelSpeed : 0
     };
     req.body.position = newPosition;
 
@@ -121,9 +121,9 @@ app.put("/miners/:minerId/travel",async (req,res)=>{
     const logInfo = {
         "minerId":minerId,
         "date": now(),
-        "year": originalPos + miner.travelSpeed,
+        "year": travelingYear,
         "planetId": miner.planetId,
-        "carryCapacity": miner.carryCapacity,
+        "carryCapacity": 0,
         "travelSpeed": miner.travelSpeed,
         "miningSpeed": miner.miningSpeed,
         "position": newPosition,
@@ -137,18 +137,36 @@ app.put("/miners/:minerId/travel",async (req,res)=>{
 
 //miner start mining
 app.put("/miners/:minerId/mining/:asteroidName",async (req,res)=>{
-    const {minerId} = req.params;
-    // console.log("minerId:" + minerId);
-    // console.log("req:" + JSON.stringify(req.body));
-    req.body.status = MINER_STATUS_TRAVELLING;
-    req.body.position = null;//TODO: need to calculate the offset via travelSpeed
+    const {minerId, asteroidName} = req.params;
+    const asteroidNameStr = asteroidName.replace("_", " ");
+    const miningYear = 1; //hard code for simulation
+    const asteroid = await Asteroid.findOne({name:asteroidNameStr});
+    console.log("asteroid:"+ asteroid);
 
-    console.log("req:" + JSON.stringify(req.body));
+    const miner = await Miner.findOne({id:minerId});
+    const newPosition = asteroid.position;
+
     const doc = await Miner.findOneAndUpdate(
         { id: minerId },
-        { $set: {"status":MINER_STATUS_TRAVELLING,"position":{}} },
+        { $set: {"status":MINER_STATUS_MINING,"position":newPosition} },
         { upsert: true}
     );
+
+    //insert miner activity log
+    const logInfo = {
+        "minerId":minerId,
+        "date": now(),
+        "year": miningYear,
+        "planetId": miner.planetId,
+        "carryCapacity": miningYear * miner.miningSpeed,
+        "travelSpeed": miner.travelSpeed,
+        "miningSpeed": miner.miningSpeed,
+        "position": newPosition,
+        "status": "Mining asteroid " + asteroidName,
+    };
+    const minerLog = new MinerLog(logInfo);
+    const insertedLog = await minerLog.save();
+
     return res.status(201).json(doc);
 });
 
