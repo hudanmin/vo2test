@@ -22,6 +22,41 @@ class PlanetList extends React.Component {
 		this.hideForm = this.hideForm.bind(this)
 	}
 
+    componentDidMount() {
+        fetch("http://localhost:3000/planets")
+            .then(data => data.json())
+            .then(
+                result => {
+                    this.setState({
+                        planet: result
+                    });
+                    console.log(this.state.result);
+                },
+                error => {
+                    this.setState({
+                        planet: "error"
+                    });
+                    return null;
+                }
+            );
+        fetch("http://localhost:3000/miners")
+            .then(data => data.json())
+            .then(
+                result => {
+                    this.setState({
+                        miners: result
+                    });
+                    //console.log(this.state.miners);
+                },
+                error => {
+                    this.setState({
+                        miners: "error"
+                    });
+                    return null;
+                }
+            );
+    }
+
 	// Show planet popup
 	showPopup() {
 		// If there is a timeout in progress, cancel it
@@ -59,7 +94,7 @@ class PlanetList extends React.Component {
 		this.setState({
 			formVisible: false
 		})
-	}	
+	}
 
 	render() {
 		return <div className="list">
@@ -75,7 +110,7 @@ class PlanetList extends React.Component {
 				</thead>
 
 				<tbody>
-					<tr onClick={this.showPopup}>
+					<tr className="hidden" onClick={this.showPopup}>
 						<td>Planet 1</td>
 						<td>3</td>
 						<td>560/1000</td>
@@ -83,7 +118,7 @@ class PlanetList extends React.Component {
 						<td></td>
 					</tr>
 
-					<tr onClick={this.showPopup}>
+					<tr className="hidden" onClick={this.showPopup}>
 						<td>Planet 2</td>
 						<td>3</td>
 						<td className="green">1080/1000</td>
@@ -91,15 +126,38 @@ class PlanetList extends React.Component {
 						<td><div className="icon-addminer" onClick={this.showForm}>Create a miner</div></td>
 					</tr>
 
-					<tr onClick={this.showPopup}>
-						<td>Planet 3</td>
-						<td>4</td>
-						<td className="green">2650/1000</td>
-						<td>168, 695</td>
-						<td><div className="icon-addminer" onClick={this.showForm}>Create a miner</div></td>
-					</tr>
-				</tbody>
-			</table>
+                    <tr className="hidden" onClick={this.showPopup}>
+                        <td>Planet 3</td>
+                        <td>4</td>
+                        <td className="green">2650/1000</td>
+                        <td>168, 695</td>
+                        <td><div className="icon-addminer" onClick={this.showForm}>Create a miner</div></td>
+                    </tr>
+                    {
+                        Boolean(this.state.planet) ? JSON.parse(JSON.stringify(this.state.planet)).map( (x,idx)=>{
+                            let planetMinerCnt = 0;
+                            let planetMineral = 0;
+                            if (Boolean(this.state.miners)) {
+                                JSON.parse(JSON.stringify(this.state.miners)).map(miner => {
+                                    if (miner.planetId === x.id) {
+                                        planetMinerCnt++;
+                                        // console.log("planet miner name:" + miner.name);
+                                    }
+                                })
+                            }
+                            return  <tr onClick={this.showPopup} id={x.id} key={idx}>
+                                    <td>{x.name}</td>
+                                    <td>{planetMinerCnt}</td>
+                                    <td>{planetMineral}/1000</td>
+								    <td>{x.position.x}, {x.position.y}</td>
+                                    <td>
+                                        <div className="icon-addminer" onClick={this.showForm}>Create a miner</div>
+                                    </td>
+                                    </tr>
+                        }):""
+                    }
+                </tbody>
+            </table>
 
 			<Rodal visible={this.state.popupVisible} onClose={this.hidePopup} width="550" height="480">
 				<h2>List of miners of Planet 1</h2>
@@ -115,5 +173,4 @@ class PlanetList extends React.Component {
 		</div>
 	}
 }
-
 export default PlanetList

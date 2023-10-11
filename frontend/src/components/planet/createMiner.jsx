@@ -35,16 +35,16 @@ class CreateMiner extends React.Component {
 	}
 
 	render() {
-		return <form>
-			<div class="field error">
-				<label for="name">Miner name</label>
-				<input type="text" id="name" placeholder="Miner name" />
+		return <form action="http://localhost:3000/miners" method="POST">
+			<div className="field error">
+				<label htmlFor="name">Miner name</label>
+				<input type="text" id="name" name="name" placeholder="Miner name" />
 				<div className="message">This name is already taken</div>
 			</div>
 
-			<div class="field">
-				<label for="planet">Planet</label>
-				<select placeholder="Select a planet" id="planet">
+			<div className="field">
+				<label htmlFor="planet">Planet</label>
+				<select placeholder="Select a planet" id="planet" name="planet">
 					<option>Planet 1</option>
 					<option>Planet 2</option>
 					<option>Planet 3</option>
@@ -56,20 +56,20 @@ class CreateMiner extends React.Component {
 			<div className="columns">
 				<div className="column">
 					<div className="field">
-						<label for="carry-capacity">Carry capacity</label>
-						<input value={this.state.carryCapacity} type="number" id="carry-capacity" placeholder="0" onChange={(e) => this.updatePoints('carryCapacity', e.target.value)} />
+						<label htmlFor="carry-capacity">Carry capacity</label>
+						<input value={this.state.carryCapacity} type="number" id="carry-capacity" name="carryCapacity" placeholder="0" onChange={(e) => this.updatePoints('carryCapacity', e.target.value)} />
 					</div>
 				</div>
 				<div className="column">
 					<div className="field">
-						<label for="travel-speed">Travel speed</label>
-						<input value={this.state.travelSpeed} type="number" id="travel-speed" placeholder="0" onChange={(e) => this.updatePoints('travelSpeed', e.target.value)} />
+						<label htmlFor="travel-speed">Travel speed</label>
+						<input value={this.state.travelSpeed} type="number" id="travel-speed" name="travelSpeed" placeholder="0" onChange={(e) => this.updatePoints('travelSpeed', e.target.value)} />
 					</div>
 				</div>
 				<div className="column">
 					<div className="field">
-						<label for="mining-speed">Mining speed</label>
-						<input value={this.state.miningSpeed} type="number" id="mining-speed" placeholder="0" onChange={(e) => this.updatePoints('miningSpeed', e.target.value)} />
+						<label htmlFor="mining-speed">Mining speed</label>
+						<input value={this.state.miningSpeed} type="number" id="mining-speed" name="miningSpeed" placeholder="0" onChange={(e) => this.updatePoints('miningSpeed', e.target.value)} />
 					</div>
 				</div>
 			</div>
