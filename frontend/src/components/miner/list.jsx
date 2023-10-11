@@ -78,42 +78,6 @@ class MinerList extends React.Component {
 			popupVisible: false
 		})
 	}
-	ListData = () => {
-		let dataStr = JSON.stringify(this.state.miners);
-		//console.debug(dataStr);
-
-		let minerList = JSON.parse(dataStr);
-		//console.log(JSON.parse(dataStr));
-
-		let row = "";
-		minerList.map(miner => {
-			let planetName = "";
-			if (Boolean(this.state.planet)) {
-				JSON.parse(JSON.stringify(this.state.planet)).map(planet => {
-					if (miner.planetId === planet.id) {
-						planetName = planet.name;
-						// console.log("planet miner name:" + miner.name);
-					}
-				})
-			}
-			row += `<tr>`;
-			row += `<td>${miner.name}</td>`;
-			row += `<td>${planetName}</td>`;
-			row += `<td>${miner.carryCapacity}</td>`;
-			row += `<td>${miner.travelSpeed}</td>`;
-			row += `<td>${miner.miningSpeed}</td>`;
-			if (Boolean(miner.position)) {
-				row += `<td>${miner.position.x}, ${miner.position.y}</td>`;
-			} else {
-				row += `<td></td>`;
-			}
-
-			let MinerStatusStr = this.state.minerStatus.get(miner.status);
-			row += `<td>${MinerStatusStr}</td>`;
-			row += `</tr>`;
-		})
-		return document.getElementById("minerTbl").innerHTML = row;
-	}
 	render() {
 		return <div className="list">
 			<table>
@@ -130,7 +94,7 @@ class MinerList extends React.Component {
 				</thead>
 
 				<tbody id="minerTbl">
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 1</td>
 						<td>Planet 1</td>
 						<td>113/120</td>
@@ -140,7 +104,7 @@ class MinerList extends React.Component {
 						<td>Mining</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 2</td>
 						<td>Planet 2</td>
 						<td className="green">120/120</td>
@@ -150,7 +114,7 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 3</td>
 						<td>Planet 3</td>
 						<td>113/120</td>
@@ -160,7 +124,7 @@ class MinerList extends React.Component {
 						<td>Transfering</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 4</td>
 						<td>Planet 1</td>
 						<td>0/70</td>
@@ -170,7 +134,7 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 5</td>
 						<td>Planet 2</td>
 						<td>113/120</td>
@@ -180,7 +144,7 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 6</td>
 						<td>Planet 3</td>
 						<td>113/120</td>
@@ -190,7 +154,7 @@ class MinerList extends React.Component {
 						<td>Transfering</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 7</td>
 						<td>Planet 1</td>
 						<td>113/120</td>
@@ -200,7 +164,7 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 8</td>
 						<td>Planet 2</td>
 						<td>113/120</td>
@@ -210,7 +174,7 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 
-					<tr onClick={this.openPopup.bind(this)}>
+					<tr className="hidden" onClick={this.openPopup.bind(this)}>
 						<td>Miner 9</td>
 						<td>Planet 3</td>
 						<td>113/120</td>
@@ -220,7 +184,27 @@ class MinerList extends React.Component {
 						<td>Traveling</td>
 					</tr>
 					{
-						Boolean(this.state.miners) ? this.ListData() : ""
+						Boolean(this.state.miners) ? JSON.parse(JSON.stringify(this.state.miners)).map( (miner,idx)=>{
+							let MinerStatusStr = this.state.minerStatus.get(miner.status);
+							let planetName = "";
+							if (Boolean(this.state.planet)) {
+								JSON.parse(JSON.stringify(this.state.planet)).map(planet => {
+									if (miner.planetId === planet.id) {
+										planetName = planet.name;
+										// console.log("planet miner name:" + miner.name);
+									}
+								})
+							}
+							return  <tr onClick={this.openPopup.bind(this)} id={miner.id} key={idx}>
+								<td>{miner.name}</td>
+								<td>{planetName}</td>
+								<td>/{miner.carryCapacity}</td>
+								<td>{miner.travelSpeed}</td>
+								<td>{miner.miningSpeed}</td>
+								<td>{Boolean(miner.position) ? miner.position.x + ", " + miner.position.y : ""}</td>
+								<td>{MinerStatusStr}</td>
+							</tr>
+						}):""
 					}
 				</tbody>
 			</table>
