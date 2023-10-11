@@ -27,9 +27,9 @@ const MinerSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    position:{
-        type:Object,
-        required:true,
+    position: {
+        type: Object,
+        required: true,
     },
     status: {
         type: Number,
@@ -38,4 +38,5 @@ const MinerSchema = new mongoose.Schema({
 });
 
 const Miner = mongoose.model("Miner", MinerSchema);
+
 module.exports = {Miner};
